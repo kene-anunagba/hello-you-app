@@ -26,6 +26,9 @@ struct hello_youApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .task {
+                    await SupabaseManager.shared.runHealthCheck()
+                }
         }
         .modelContainer(sharedModelContainer)
     }

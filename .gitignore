@@ -23,7 +23,8 @@ xcuserdata/
 # Swift Package Manager
 .build/
 .swiftpm/
-Package.resolved
+# Package.resolved is intentionally tracked for Xcode-managed SPM
+# dependencies, so builds stay pinned to the resolved versions.
 
 # CocoaPods
 Pods/
