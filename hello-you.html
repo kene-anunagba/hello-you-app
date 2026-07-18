@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hello, you. · Product Design</title>
+<style>
+/* ============================================================
+   Hello, you. design showcase
+   A companionship app. Someone there.
+   Two themes: Dark and Cream. Toggle top-right.
+   ============================================================ */
+
+:root{
+  /* dark (default) */
+  --ink:#0A0A0C;
+  --ink-2:#0E0E11;
+  --surface:#161619;
+  --surface-2:#1E1E23;
+  --surface-3:#26262C;
+  --hair:rgba(255,255,255,0.075);
+  --hair-strong:rgba(255,255,255,0.14);
+  --text:#F2F0EC;
+  --dim:rgba(242,240,236,0.54);
+  --faint:rgba(242,240,236,0.30);
+  --ghost:rgba(242,240,236,0.14);
+  --lav:#B7ACE4;
+  --lav-deep:#8F84C4;
+  --lav-soft:rgba(183,172,228,0.16);
+  --lav-fill:#B7ACE4;      /* constant light-lavender button fill */
+  --titanium:#CBC5BC;
+  --green:#8FBF9F;
+  --red:#E0928A;
+  --on-primary:#0A0A0C;    /* text on a --text-filled button */
+  --warm-top:#141319;      /* top glow on 'warm' screens */
+  --hi:rgba(255,255,255,0.30);  /* home indicator */
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Inter,system-ui,sans-serif;
+  --mono:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,monospace;
+}
+html[data-theme="light"]{
+  /* cream */
+  --ink:#F1EBDF;
+  --ink-2:#EAE2D2;
+  --surface:#FBF7EF;
+  --surface-2:#F3ECDE;
+  --surface-3:#EAE1D0;
+  --hair:rgba(45,38,30,0.09);
+  --hair-strong:rgba(45,38,30,0.17);
+  --text:#2B2621;
+  --dim:rgba(43,38,33,0.58);
+  --faint:rgba(43,38,33,0.36);
+  --ghost:rgba(43,38,33,0.13);
+  --lav:#6D60AE;
+  --lav-deep:#574B92;
+  --lav-soft:rgba(129,116,196,0.12);
+  --on-primary:#F7F2E8;
+  --warm-top:#F8F1E4;
+  --hi:rgba(43,38,33,0.22);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ink);color:var(--text);font-family:var(--sans);line-height:1.5;overflow-x:hidden;
+  transition:background .5s ease,color .5s ease;
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+
+/* ---------- theme toggle ---------- */
+.theme-toggle{
+  position:fixed;top:20px;right:20px;z-index:60;display:flex;gap:2px;
+  background:var(--surface-2);border:1px solid var(--hair-strong);border-radius:22px;padding:4px;
+  backdrop-filter:blur(14px);box-shadow:0 8px 30px -12px rgba(0,0,0,.5);
+}
+.theme-toggle button{
+  font-family:inherit;font-size:12.5px;font-weight:500;letter-spacing:-0.01em;
+  color:var(--dim);background:none;border:none;padding:7px 16px;border-radius:18px;cursor:pointer;transition:.2s;
+}
+.theme-toggle button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.15);}
+
+/* ---------- page scaffold ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+.section{padding:120px 0;border-top:1px solid var(--hair);}
+.section:first-of-type{border-top:none;}
+.eyebrow{font-size:11.5px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--dim);margin-bottom:22px;display:flex;align-items:center;gap:12px;}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--hair-strong);}
+.h2{font-size:clamp(28px,4vw,44px);font-weight:600;letter-spacing:-0.03em;line-height:1.05;}
+.lede{font-size:18px;color:var(--dim);max-width:560px;margin-top:20px;line-height:1.6;letter-spacing:-0.01em;}
+
+/* ============ HERO ============ */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;overflow:hidden;
+  background:
+    radial-gradient(120% 80% at 50% -10%,rgba(183,172,228,0.12),transparent 55%),
+    radial-gradient(80% 60% at 50% 120%,rgba(183,172,228,0.05),transparent 60%),
+    var(--ink);
+}
+.hero-mark{margin-bottom:34px;animation:rise 1.4s cubic-bezier(.16,1,.3,1) both;}
+.wordmark{font-size:clamp(46px,11vw,116px);font-weight:600;letter-spacing:-0.05em;line-height:0.9;animation:rise 1.4s .12s cubic-bezier(.16,1,.3,1) both;}
+.wordmark .comma{color:var(--lav);}
+.hero-tag{margin-top:28px;font-size:clamp(17px,2.2vw,22px);color:var(--dim);letter-spacing:-0.01em;font-weight:400;animation:rise 1.4s .24s cubic-bezier(.16,1,.3,1) both;}
+.hero-sub{margin-top:56px;font-size:12px;letter-spacing:0.24em;text-transform:uppercase;color:var(--faint);animation:rise 1.4s .4s cubic-bezier(.16,1,.3,1) both;}
+@keyframes rise{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
+
+/* ============ BRAND / PALETTE / TYPE ============ */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+.rationale p{color:var(--dim);font-size:16px;margin-top:18px;max-width:440px;line-height:1.65;}
+.rationale strong{color:var(--text);font-weight:500;}
+.logo-board{background:linear-gradient(160deg,var(--ink-2),var(--ink));border:1px solid var(--hair);border-radius:28px;padding:48px;display:flex;flex-direction:column;gap:38px;}
+.logo-row{display:flex;align-items:center;gap:22px;}
+.logo-row .name{font-size:30px;font-weight:600;letter-spacing:-0.04em;}
+.logo-row .name .comma{color:var(--lav);}
+.logo-cap{font-size:12px;color:var(--faint);letter-spacing:0.02em;margin-top:3px;}
+.icon-tile{width:58px;height:58px;border-radius:17px;background:var(--ink);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;}
+.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:6px;}
+.sw{border-radius:16px;height:92px;border:1px solid var(--hair);position:relative;overflow:hidden;}
+.sw span{position:absolute;left:14px;bottom:12px;font-size:11px;letter-spacing:0.04em;}
+
+.type-spec{border:1px solid var(--hair);border-radius:24px;padding:44px;background:var(--ink-2);}
+.type-spec .disp{font-size:clamp(40px,7vw,84px);font-weight:600;letter-spacing:-0.045em;line-height:0.98;}
+.type-row{display:flex;align-items:baseline;gap:16px;padding:18px 0;border-top:1px solid var(--hair);}
+.type-row:first-of-type{border-top:none;margin-top:20px;}
+.type-row .lbl{font-family:var(--mono);font-size:11px;color:var(--faint);width:120px;flex:none;}
+
+/* ============ DEVICE FRAMES ============ */
+.screens-flow{display:flex;flex-wrap:wrap;gap:56px 44px;justify-content:center;margin-top:64px;}
+.frame{width:322px;}
+.frame-cap{margin-top:22px;}
+.frame-cap .n{font-family:var(--mono);font-size:11px;color:var(--faint);}
+.frame-cap .t{font-size:15px;font-weight:500;margin-top:5px;letter-spacing:-0.01em;}
+.frame-cap .t .comma{color:var(--lav);}
+.frame-cap .d{font-size:13px;color:var(--dim);margin-top:4px;line-height:1.5;}
+
+.device{
+  width:322px;height:680px;border-radius:52px;background:linear-gradient(150deg,#232327,#151517);padding:11px;position:relative;
+  box-shadow:0 2px 4px rgba(0,0,0,.6),0 40px 80px -30px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.04);
+}
+.screen{width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;background:var(--ink);display:flex;flex-direction:column;transition:background .5s ease;}
+.screen.warm{background:radial-gradient(130% 60% at 50% 0%,var(--warm-top),var(--ink) 60%);}
+.status{height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 6px;font-size:14px;font-weight:600;letter-spacing:-0.01em;position:relative;z-index:5;color:var(--text);}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:88px;height:26px;background:#000;border-radius:16px;}
+.status .sig{display:flex;align-items:center;gap:6px;}
+.status svg{display:block;}
+.home-ind{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:120px;height:5px;border-radius:3px;background:var(--hi);z-index:5;}
+.body{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;}
+
+.pad{padding:0 26px;}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:6px 26px 18px;}
+.nav .title{font-size:17px;font-weight:600;letter-spacing:-0.02em;}
+.icon-btn{width:34px;height:34px;border-radius:50%;background:var(--surface-2);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;color:var(--text);}
+.icon-btn.plain{background:transparent;border:none;color:var(--dim);}
+.kicker{font-size:12px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--lav);}
+.q{font-size:30px;font-weight:600;letter-spacing:-0.035em;line-height:1.08;margin-top:14px;}
+.q-sub{font-size:14.5px;color:var(--dim);margin-top:12px;line-height:1.5;}
+
+.btn{height:54px;border-radius:27px;display:flex;align-items:center;justify-content:center;gap:9px;font-size:16px;font-weight:600;letter-spacing:-0.01em;cursor:default;border:1px solid transparent;}
+.btn-primary{background:var(--text);color:var(--on-primary);}
+.btn-ghost{background:transparent;border-color:var(--hair-strong);color:var(--text);}
+.btn-quiet{background:var(--surface-2);color:var(--text);border:1px solid var(--hair);}
+.btn-lav{background:var(--lav-fill);color:#191233;}
+.btn-danger{background:transparent;border-color:rgba(224,146,138,.45);color:var(--red);}
+
+/* option list */
+.opt-list{display:flex;flex-direction:column;gap:11px;}
+.opt{display:flex;align-items:center;gap:16px;padding:15px 18px;border-radius:18px;background:var(--surface);border:1px solid var(--hair);}
+.opt.sel{border-color:rgba(139,126,204,.55);background:var(--lav-soft);box-shadow:0 0 0 3px rgba(139,126,204,.08);}
+.opt .gl{width:40px;height:40px;border-radius:12px;background:var(--surface-2);flex:none;display:flex;align-items:center;justify-content:center;color:var(--text);}
+.opt.sel .gl{background:var(--lav-soft);color:var(--lav);}
+.opt .ol{font-size:16px;font-weight:500;letter-spacing:-0.01em;}
+.opt .od{font-size:12.5px;color:var(--dim);margin-top:1px;}
+.opt .chk{margin-left:auto;color:var(--lav);opacity:0;}
+.opt.sel .chk{opacity:1;}
+
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.chip{padding:18px 16px;border-radius:18px;background:var(--surface);border:1px solid var(--hair);min-height:96px;display:flex;flex-direction:column;justify-content:space-between;}
+.chip.sel{border-color:rgba(139,126,204,.55);background:var(--lav-soft);}
+.chip .cl{font-size:15.5px;font-weight:500;letter-spacing:-0.01em;}
+.chip .cd{font-size:12px;color:var(--dim);margin-top:3px;line-height:1.4;}
+.chip .ci{color:var(--dim);}
+.chip.sel .ci{color:var(--lav);}
+
+/* avatars */
+.av{border-radius:50%;position:relative;overflow:hidden;flex:none;}
+.av::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);border-radius:50%;}
+.av.a1{background:radial-gradient(120% 120% at 25% 20%,#C9BFF2,#6E63A8 55%,#2A2340);}
+.av.a2{background:radial-gradient(120% 120% at 30% 25%,#D8D2C6,#8C8579 60%,#2E2B26);}
+.av.a3{background:radial-gradient(120% 120% at 70% 20%,#9FB2D6,#3E4C74 60%,#1B2138);}
+.av.a4{background:radial-gradient(120% 120% at 30% 75%,#E4C7B8,#9E7663 55%,#2E211B);}
+.av.a5{background:radial-gradient(120% 120% at 50% 25%,#BFC9BF,#5F7563 60%,#22271F);}
+.av-grain{position:absolute;inset:0;opacity:.5;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* matching */
+.match-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;}
+.pulse-core{width:96px;height:96px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,#CABFF4,#8f84c4 60%,#4b4470);}
+.pulse-core .core-dot{width:15px;height:15px;border-radius:50%;background:#fff;}
+.ring{position:absolute;border-radius:50%;border:1px solid rgba(183,172,228,.5);width:96px;height:96px;animation:pulse 3s ease-out infinite;}
+.ring:nth-child(2){animation-delay:1s;}.ring:nth-child(3){animation-delay:2s;}
+@keyframes pulse{0%{transform:scale(1);opacity:.7;}100%{transform:scale(3);opacity:0;}}
+.match-txt{margin-top:56px;text-align:center;}
+.match-txt .m1{font-size:22px;font-weight:600;letter-spacing:-0.03em;}
+.match-txt .m2{font-size:14px;color:var(--dim);margin-top:8px;}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:22px;}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--faint);animation:blink 1.4s infinite;}
+.dots i:nth-child(2){animation-delay:.2s;}.dots i:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,100%{opacity:.3;}50%{opacity:1;}}
+
+/* connected */
+.match-card{margin:0 26px;background:linear-gradient(165deg,var(--surface),var(--ink-2));border:1px solid var(--hair);border-radius:26px;padding:30px 26px;text-align:center;}
+.match-card .pair{display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+.match-card .pair .av{margin:0 -10px;border:3px solid var(--surface);}
+.match-name{font-size:24px;font-weight:600;letter-spacing:-0.03em;}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--lav);background:var(--lav-soft);padding:4px 10px;border-radius:20px;margin-top:10px;}
+.tags{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:16px;}
+.tag{font-size:12px;color:var(--dim);background:var(--surface-2);border:1px solid var(--hair);padding:5px 12px;border-radius:14px;}
+.ground{margin:22px 26px 0;padding:16px 18px;background:var(--surface);border:1px solid var(--hair);border-radius:18px;}
+.ground .gt{font-size:12.5px;color:var(--dim);display:flex;gap:10px;align-items:flex-start;line-height:1.45;}
+.ground .gt+.gt{margin-top:11px;}
+
+/* voice call */
+.call{flex:1;display:flex;flex-direction:column;align-items:center;background:radial-gradient(120% 55% at 50% 18%,rgba(183,172,228,.16),transparent 60%);}
+.call-glow{width:150px;height:150px;border-radius:50%;margin-top:40px;position:relative;background:radial-gradient(circle at 35% 30%,#CDC3F2,#8f84c4 58%,#413b63);animation:breathe 4s ease-in-out infinite;}
+@keyframes breathe{0%,100%{transform:scale(1);box-shadow:0 0 60px rgba(183,172,228,.28);}50%{transform:scale(1.04);box-shadow:0 0 90px rgba(183,172,228,.42);}}
+.call-name{font-size:26px;font-weight:600;letter-spacing:-0.03em;margin-top:34px;}
+.call-timer{font-family:var(--mono);font-size:15px;color:var(--dim);margin-top:8px;letter-spacing:0.04em;}
+.wave{display:flex;align-items:center;gap:3px;height:30px;margin-top:26px;}
+.wave i{width:3px;border-radius:2px;background:var(--lav);opacity:.9;animation:eq 1.1s ease-in-out infinite;}
+@keyframes eq{0%,100%{height:8px;}50%{height:26px;}}
+.call-ctrls{margin-top:auto;display:flex;justify-content:center;gap:26px;padding-bottom:22px;}
+.cc{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.cc .b{width:60px;height:60px;border-radius:50%;background:var(--surface-2);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;color:var(--text);}
+.cc .b.leave{background:var(--red);border:none;color:#2a1512;}
+.cc .lb{font-size:11px;color:var(--dim);}
+
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--hair-strong);border-radius:30px 30px 0 0;padding:26px 26px 30px;box-shadow:0 -30px 60px -20px rgba(0,0,0,.6);}
+.sheet-grip{width:38px;height:4px;border-radius:2px;background:var(--ghost);margin:0 auto 20px;}
+
+.center-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 30px;}
+.recap{width:100%;background:var(--surface);border:1px solid var(--hair);border-radius:20px;padding:18px 20px;margin-top:26px;}
+.recap-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-top:1px solid var(--hair);}
+.recap-row:first-child{border-top:none;}
+.recap-row .k{font-size:13px;color:var(--dim);}
+.recap-row .v{font-size:14px;font-weight:500;}
+
+.stars{display:flex;gap:12px;justify-content:center;margin:30px 0 8px;}
+.rate-tags{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:26px;}
+.rt{font-size:13px;padding:9px 15px;border-radius:20px;background:var(--surface);border:1px solid var(--hair);color:var(--dim);}
+.rt.on{background:var(--lav-soft);border-color:rgba(139,126,204,.5);color:var(--lav);}
+
+.ta-face{margin:0 auto 26px;}
+.mutual{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:20px;font-size:13px;color:var(--dim);}
+.mutual .p{display:flex;align-items:center;gap:7px;}
+.mutual .p b{color:var(--text);font-weight:500;}
+
+/* list rows */
+.group{background:var(--surface);border:1px solid var(--hair);border-radius:18px;overflow:hidden;margin:0 26px;}
+.group-label{font-size:12px;color:var(--faint);letter-spacing:0.08em;text-transform:uppercase;margin:24px 26px 10px;}
+.row{display:flex;align-items:center;gap:14px;padding:15px 18px;border-top:1px solid var(--hair);}
+.row:first-child{border-top:none;}
+.row .ri{width:30px;height:30px;border-radius:9px;background:var(--surface-3);display:flex;align-items:center;justify-content:center;color:var(--dim);flex:none;}
+.row .rt2{font-size:15px;font-weight:450;letter-spacing:-0.01em;}
+.row .rd{font-size:12px;color:var(--dim);margin-top:1px;}
+.row .rr{margin-left:auto;color:var(--faint);display:flex;align-items:center;gap:8px;font-size:13px;}
+.toggle{width:44px;height:27px;border-radius:14px;background:var(--surface-3);position:relative;flex:none;}
+.toggle.on{background:var(--lav);}
+.toggle::after{content:"";position:absolute;width:23px;height:23px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.2s;}
+.toggle.on::after{left:19px;}
+
+/* appearance segmented */
+.seg{display:flex;background:var(--surface-2);border-radius:13px;padding:3px;gap:3px;}
+.seg-o{flex:1;text-align:center;font-size:13px;font-weight:500;padding:9px 0;border-radius:10px;color:var(--dim);cursor:pointer;letter-spacing:-0.01em;transition:.2s;}
+.seg-o.on{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.18);}
+
+.me{display:flex;align-items:center;gap:16px;margin:4px 26px;padding:20px;background:linear-gradient(160deg,var(--surface),var(--ink-2));border:1px solid var(--hair);border-radius:22px;}
+.me .nm{font-size:20px;font-weight:600;letter-spacing:-0.02em;}
+.me .st{font-size:12.5px;color:var(--dim);margin-top:3px;display:flex;align-items:center;gap:6px;}
+
+.safe-hero{text-align:center;padding:14px 30px 6px;}
+.safe-shield{width:64px;height:64px;border-radius:20px;margin:0 auto 18px;background:radial-gradient(circle at 40% 30%,rgba(143,191,159,.35),rgba(143,191,159,.08));border:1px solid rgba(143,191,159,.3);display:flex;align-items:center;justify-content:center;color:var(--green);}
+
+/* premium */
+.prem{flex:1;background:radial-gradient(120% 50% at 50% 0%,rgba(183,172,228,.18),transparent 55%);display:flex;flex-direction:column;padding-top:6px;}
+.prem-logo{display:flex;align-items:center;gap:8px;justify-content:center;margin:20px 0 6px;}
+.prem-logo .pl{font-size:26px;font-weight:600;letter-spacing:-0.03em;}
+.prem-logo .pl .comma{color:var(--lav);}
+.prem-logo .plus{color:var(--lav);font-size:24px;font-weight:600;}
+.prem-sub{text-align:center;font-size:14px;color:var(--dim);padding:0 40px;line-height:1.5;}
+.prem-feats{margin:26px 26px 0;display:flex;flex-direction:column;gap:2px;}
+.pf{display:flex;gap:14px;align-items:flex-start;padding:13px 0;border-top:1px solid var(--hair);}
+.pf:first-child{border-top:none;}
+.pf .pfi{color:var(--lav);margin-top:1px;flex:none;}
+.pf .pft{font-size:14.5px;font-weight:500;}
+.pf .pfd{font-size:12.5px;color:var(--dim);margin-top:2px;line-height:1.45;}
+.price{text-align:center;margin-top:auto;padding:0 26px;}
+.price .pm{font-size:13px;color:var(--dim);}
+.price .pp{font-size:15px;color:var(--text);font-weight:500;}
+
+/* landing */
+.landing{border:1px solid var(--hair);border-radius:32px;overflow:hidden;margin-top:56px;background:radial-gradient(90% 60% at 78% 0%,rgba(183,172,228,.14),transparent 55%),linear-gradient(180deg,var(--ink-2),var(--ink));}
+.landing-top{display:flex;align-items:center;justify-content:space-between;padding:26px 40px;border-bottom:1px solid var(--hair);}
+.landing-nav{display:flex;gap:32px;font-size:13.5px;color:var(--dim);}
+.landing-body{display:grid;grid-template-columns:1.15fr 0.85fr;gap:20px;padding:70px 40px 76px;align-items:center;}
+.landing-h1{font-size:clamp(38px,5.2vw,60px);font-weight:600;letter-spacing:-0.045em;line-height:1.03;}
+.landing-h1 em{font-style:normal;color:var(--lav);}
+.landing-p{font-size:17px;color:var(--dim);margin-top:24px;max-width:400px;line-height:1.6;}
+.waitform{display:flex;gap:10px;margin-top:34px;max-width:420px;}
+.waitform .inp{flex:1;height:54px;border-radius:27px;background:var(--surface);border:1px solid var(--hair-strong);display:flex;align-items:center;padding:0 22px;color:var(--faint);font-size:15px;}
+.waitform .sub{height:54px;padding:0 26px;border-radius:27px;background:var(--text);color:var(--on-primary);font-weight:600;font-size:15px;display:flex;align-items:center;}
+.wait-meta{margin-top:20px;font-size:13px;color:var(--faint);display:flex;align-items:center;gap:10px;}
+.landing-visual{display:flex;justify-content:center;}
+.mini-phone{width:238px;height:500px;border-radius:44px;background:linear-gradient(150deg,#232327,#151517);padding:9px;box-shadow:0 40px 90px -30px rgba(0,0,0,.9);}
+
+/* app store */
+.aps{display:flex;gap:22px;overflow-x:auto;padding:64px 4px 20px;scrollbar-width:none;}
+.aps::-webkit-scrollbar{display:none;}
+.aps-card{flex:none;width:250px;border-radius:32px;padding:38px 26px 0;height:540px;overflow:hidden;position:relative;display:flex;flex-direction:column;text-align:center;}
+.aps-1{background:linear-gradient(180deg,rgba(183,172,228,.16),transparent 60%),var(--ink-2);}
+.aps-2{background:linear-gradient(180deg,rgba(159,178,214,.14),transparent 60%),var(--ink-2);}
+.aps-3{background:linear-gradient(180deg,rgba(216,210,198,.14),transparent 60%),var(--ink-2);}
+.aps-4{background:linear-gradient(180deg,rgba(143,191,159,.13),transparent 60%),var(--ink-2);}
+.aps-card .ah{font-size:24px;font-weight:600;letter-spacing:-0.03em;line-height:1.12;}
+.aps-card .ah em{font-style:normal;color:var(--lav);}
+.aps-card .ap{font-size:13px;color:var(--dim);margin-top:12px;line-height:1.5;padding:0 6px;}
+.aps-shot{margin-top:auto;background:var(--ink);border-radius:26px 26px 0 0;border:1px solid var(--hair);border-bottom:none;padding:16px 16px 0;height:270px;overflow:hidden;box-shadow:0 -10px 40px -20px rgba(0,0,0,.5);}
+
+.foot{padding:80px 0 100px;border-top:1px solid var(--hair);text-align:center;}
+.foot .fm{font-size:38px;font-weight:600;letter-spacing:-0.04em;}
+.foot .fm .comma{color:var(--lav);}
+.foot .ft{color:var(--dim);margin-top:16px;font-size:15px;}
+.foot .fc{color:var(--faint);margin-top:40px;font-size:12px;letter-spacing:0.02em;}
+
+@media(max-width:900px){
+  .grid-2{grid-template-columns:1fr;gap:48px;}
+  .landing-body{grid-template-columns:1fr;}
+  .landing-visual{display:none;}
+  .section{padding:80px 0;}
+  .wrap{padding:0 20px;}
+  .theme-toggle{top:12px;right:12px;}
+}
+</style>
+</head>
+<body>
+
+<div class="theme-toggle" role="group" aria-label="Appearance">
+  <button data-set="light">Cream</button>
+  <button data-set="dark" class="on">Dark</button>
+</div>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-mark">
+    <!-- hello, you mark: a soft greeting bubble with a single presence dot ("you") -->
+    <svg width="76" height="76" viewBox="0 0 80 80" fill="none">
+      <defs>
+        <linearGradient id="brand" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#C9BFF2"/><stop offset="1" stop-color="#8F84C4"/>
+        </linearGradient>
+        <radialGradient id="glow" cx="0.5" cy="0.4" r="0.7">
+          <stop offset="0" stop-color="#B7ACE4" stop-opacity="0.5"/><stop offset="1" stop-color="#B7ACE4" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="40" cy="34" r="27" fill="url(#glow)"/>
+      <rect x="10" y="11" width="60" height="44" rx="18" stroke="url(#brand)" stroke-width="3.4"/>
+      <path d="M27 55 C25 63 20 69 13 72" stroke="url(#brand)" stroke-width="3.4" stroke-linecap="round"/>
+      <circle cx="40" cy="33" r="5.4" fill="#B7ACE4"/>
+    </svg>
+  </div>
+  <div class="wordmark">Hello<span class="comma">,</span> you.</div>
+  <div class="hero-tag">Sometimes you don't need a relationship. You just need someone there.</div>
+  <div class="hero-sub">A companionship app · Brand & Product Design</div>
+</header>
+
+<!-- ============ BRAND ============ -->
+<section class="section" id="brand">
+  <div class="wrap grid-2">
+    <div class="rationale">
+      <div class="eyebrow">The Name</div>
+      <h2 class="h2">Hello<span style="color:var(--lav)">,</span> you.</h2>
+      <p>It's the first thing a warm voice says when it turns toward you. <strong>The greeting, not the pitch.</strong> Two small words that mean someone is glad you're here.</p>
+      <p>It never shouts, never sells. The comma is the whole idea. A small <strong>pause before the "you,"</strong> the moment attention lands on the person across from you.</p>
+      <p>It says nothing about apps, chat, or matching. It just sounds like being welcomed.</p>
+    </div>
+    <div class="logo-board">
+      <div class="logo-row">
+        <svg width="40" height="40" viewBox="0 0 80 80" fill="none">
+          <rect x="10" y="11" width="60" height="44" rx="18" stroke="url(#brand)" stroke-width="3.6"/>
+          <path d="M27 55 C25 63 20 69 13 72" stroke="url(#brand)" stroke-width="3.6" stroke-linecap="round"/>
+          <circle cx="40" cy="33" r="5.6" fill="#B7ACE4"/>
+        </svg>
+        <div><div class="name">Hello<span class="comma">,</span> you.</div><div class="logo-cap">Primary lockup, the greeting itself</div></div>
+      </div>
+      <div class="logo-row">
+        <div class="icon-tile">
+          <svg width="30" height="30" viewBox="0 0 80 80">
+            <rect x="10" y="10" width="60" height="44" rx="18" fill="url(#brand)"/>
+            <path d="M28 50 L19 71 L44 52 Z" fill="url(#brand)"/>
+            <circle cx="40" cy="31" r="6" fill="#FBF7EF"/>
+          </svg>
+        </div>
+        <div><div class="name" style="font-size:20px;">App icon</div><div class="logo-cap">The bubble, filled, with "you" inside it</div></div>
+      </div>
+      <div class="swatches">
+        <div class="sw" style="background:#0A0A0C;"><span style="color:#F2F0EC;">Ink</span></div>
+        <div class="sw" style="background:#F1EBDF;"><span style="color:#2B2621;">Cream</span></div>
+        <div class="sw" style="background:#CBC5BC;"><span style="color:#111;">Titanium</span></div>
+        <div class="sw" style="background:#B7ACE4;"><span style="color:#191233;">Lavender</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TYPE + PALETTE ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="eyebrow">Type & Colour</div>
+    <h2 class="h2" style="max-width:640px;">SF Pro, set with air. One calm canvas, dark or cream, and a single restrained lavender.</h2>
+    <div class="type-spec" style="margin-top:44px;">
+      <div class="disp">Someone there.</div>
+      <div class="type-row"><span class="lbl">Display / 600</span><span style="font-size:22px;letter-spacing:-0.03em;">Say hello to Night&nbsp;Owl</span></div>
+      <div class="type-row"><span class="lbl">Body / 400</span><span style="font-size:15px;color:var(--dim);">Twenty quiet minutes. No last names, no numbers, just a conversation.</span></div>
+      <div class="type-row"><span class="lbl">Mono / caption</span><span style="font-family:var(--mono);font-size:13px;color:var(--faint);">20:00 · ENCRYPTED · ANONYMOUS</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FLOW ============ -->
+<section class="section" id="flow">
+  <div class="wrap">
+    <div class="eyebrow">The Flow</div>
+    <h2 class="h2">From "how are you feeling" to a voice, in three taps.</h2>
+    <p class="lede">No profiles to browse, no swiping, no waiting. Tell it your state of mind and what you need, whether you're low or you've got great news, and it finds the person who's the other half of that.</p>
+
+    <div class="screens-flow">
+
+      <!-- 01 Onboarding -->
+      <div class="frame">
+        <div class="device"><div class="screen warm">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="sig">
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="4.5" width="3" height="6.5" rx="1"/><rect x="10" y="2" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity="0.4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/></svg>
+          </span></div>
+          <div class="body" style="padding:0 30px;">
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+              <svg width="56" height="56" viewBox="0 0 80 80" fill="none" style="margin-bottom:30px;">
+                <circle cx="40" cy="34" r="26" fill="url(#glow)"/>
+                <rect x="10" y="11" width="60" height="44" rx="18" stroke="url(#brand)" stroke-width="3.4"/>
+                <path d="M27 55 C25 63 20 69 13 72" stroke="url(#brand)" stroke-width="3.4" stroke-linecap="round"/>
+                <circle cx="40" cy="33" r="5.4" fill="#B7ACE4"/>
+              </svg>
+              <div style="font-size:38px;font-weight:600;letter-spacing:-0.05em;line-height:0.95;">Hello<span style="color:var(--lav)">,</span> you.</div>
+              <div style="font-size:16px;color:var(--dim);margin-top:18px;line-height:1.55;">A quiet place to talk with one real person, when you'd rather not be alone.</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:11px;padding-bottom:30px;">
+              <div class="btn btn-primary">Choose your name</div>
+              <div class="btn btn-ghost">I already have an account</div>
+              <div style="text-align:center;font-size:11.5px;color:var(--faint);margin-top:6px;line-height:1.5;">No phone number. No socials. No last name.</div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div></div>
+        <div class="frame-cap"><div class="n">01</div><div class="t">Onboarding</div><div class="d">The greeting is the first screen. The promise stated plainly, before anything is asked of you.</div></div>
+      </div>
+
+      <!-- 02 Mood -->
+      <div class="frame">
+        <div class="device"><div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="sig">
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="4.5" width="3" height="6.5" rx="1"/><rect x="10" y="2" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity="0.4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/></svg>
+          </span></div>
+          <div class="body">
+            <div class="nav"><div class="icon-btn plain"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></div><div style="font-family:var(--mono);font-size:11px;color:var(--faint);">STEP 1 / 2</div><div style="width:34px;"></div></div>
+            <div class="pad" style="margin-top:6px;">
+              <div class="kicker">Right now</div>
+              <div class="q">How are you<br>feeling?</div>
+            </div>
+            <div class="pad opt-list" style="margin-top:24px;overflow-y:auto;">
+              <div class="opt sel">
+                <div class="gl"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 10h.01M15.5 10h.01M8 14.5s1.5 2 4 2 4-2 4-2"/></svg></div>
+                <div><div class="ol">Happy</div><div class="od">In a good place right now</div></div>
+                <div class="chk"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+              </div>
+              <div class="opt">
+                <div class="gl"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></div>
+                <div><div class="ol">Celebrating</div><div class="od">Good news I want to share</div></div>
+                <div class="chk"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+              </div>
+              <div class="opt">
+                <div class="gl"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M18 20a6 6 0 0 0-12 0"/><circle cx="12" cy="8" r="4"/></svg></div>
+                <div><div class="ol">Lonely</div><div class="od">Could use some company</div></div>
+                <div class="chk"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+              </div>
+              <div class="opt">
+                <div class="gl"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 14c2-3 5-3 8 0s6 3 8 0"/><path d="M4 9c2-3 5-3 8 0s6 3 8 0"/></svg></div>
+                <div><div class="ol">Stressed</div><div class="od">Need to decompress</div></div>
+                <div class="chk"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+              </div>
+              <div class="opt">
+                <div class="gl"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg></div>
+                <div><div class="ol">Can't sleep</div><div class="od">Awake and restless</div></div>
+                <div class="chk"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+              </div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div></div>
+        <div class="frame-cap"><div class="n">02</div><div class="t">Mood selection</div><div class="d">For the highs as much as the lows. Happy and celebrating sit right at the top, next to lonely.</div></div>
+      </div>
+
+      <!-- 03 Need -->
+      <div class="frame">
+        <div class="device"><div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="sig">
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="4.5" width="3" height="6.5" rx="1"/><rect x="10" y="2" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity="0.4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/></svg>
+          </span></div>
+          <div class="body">
+            <div class="nav"><div class="icon-btn plain"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></div><div style="font-family:var(--mono);font-size:11px;color:var(--faint);">STEP 2 / 2</div><div style="width:34px;"></div></div>
+            <div class="pad" style="margin-top:6px;">
+              <div class="kicker">And you'd like</div>
+              <div class="q">What do you<br>need?</div>
+            </div>
+            <div class="pad chips" style="margin-top:24px;">
+              <div class="chip sel"><div><div class="cl">Someone to listen</div><div class="cd">Space to talk it out</div></div><div class="ci" style="margin-top:14px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 12a8 8 0 0 1 16 0v5a2 2 0 0 1-2 2h-1v-6h3M4 12v5a2 2 0 0 0 2 2h1v-6H4"/></svg></div></div>
+              <div class="chip"><div><div class="cl">Someone to celebrate</div><div class="cd">Share the good stuff</div></div><div class="ci" style="margin-top:14px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 20l7-14 3 6-4 2 6 4M14 4l1 2M19 8l1 1"/></svg></div></div>
+              <div class="chip"><div><div class="cl">Deep conversation</div><div class="cd">Go beyond small talk</div></div><div class="ci" style="margin-top:14px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 3a9 9 0 0 0-9 9 9 9 0 0 0 3 6.7V21l3-1.5a9 9 0 1 0 3-16.5Z"/><path d="M9 12h6M12 9v6"/></svg></div></div>
+              <div class="chip"><div><div class="cl">Quiet company</div><div class="cd">Presence, low talk</div></div><div class="ci" style="margin-top:14px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div></div>
+              <div class="chip"><div><div class="cl">Someone funny</div><div class="cd">Lighten the mood</div></div><div class="ci" style="margin-top:14px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></div></div>
+              <div class="chip"><div><div class="cl">Random chat</div><div class="cd">Wherever it goes</div></div><div class="ci" style="margin-top:14px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 4h16v12H7l-3 3V4Z"/></svg></div></div>
+            </div>
+            <div class="pad" style="margin-top:auto;padding-bottom:22px;"><div class="btn btn-lav">Find someone</div></div>
+          </div>
+          <div class="home-ind"></div>
+        </div></div>
+        <div class="frame-cap"><div class="n">03</div><div class="t">Need selection</div><div class="d">Your need gets paired with its complement. A listener for a talker, someone to celebrate the good news.</div></div>
+      </div>
+
+      <!-- 04 Matching -->
+      <div class="frame">
+        <div class="device"><div class="screen warm">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="sig">
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="4.5" width="3" height="6.5" rx="1"/><rect x="10" y="2" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity="0.4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/></svg>
+          </span></div>
+          <div class="body">
+            <div class="match-stage">
+              <div style="position:relative;display:flex;align-items:center;justify-content:center;">
+                <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+                <div class="pulse-core"><span class="core-dot"></span></div>
+              </div>
+              <div class="match-txt">
+                <div class="m1">Finding your person</div>
+                <div class="m2">Someone who likes to listen</div>
+                <div class="dots"><i></i><i></i><i></i></div>
+              </div>
+            </div>
+            <div class="pad" style="padding-bottom:26px;"><div class="btn btn-quiet">Cancel</div></div>
+          </div>
+          <div class="home-ind"></div>
+        </div></div>
+        <div class="frame-cap"><div class="n">04</div><div class="t">Matching</div><div class="d">Not a spinner but a slow breathing pulse, so the wait itself feels calm and intentional.</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE CALL ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="eyebrow">The Conversation</div>
+    <h2 class="h2">Twenty minutes. A voice, a name, nothing to perform.</h2>
+    <p class="lede">Every call opens on the same footing and ends on the same terms. No numbers change hands. Continuing is always a choice both people make out loud.</p>
+
+    <div class="screens-flow">
+
+      <!-- 05 Connected -->
+      <div class="frame">
+        <div class="device"><div class="screen warm">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="sig">
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="4.5" width="3" height="6.5" rx="1"/><rect x="10" y="2" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity="0.4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/></svg>
+          </span></div>
+          <div class="body">
+            <div style="text-align:center;padding:20px 0 4px;"><div class="kicker" style="color:var(--green);">✓ Connected</div></div>
+            <div class="match-card" style="margin-top:16px;">
+              <div class="pair">
+                <div class="av a1" style="width:64px;height:64px;"><div class="av-grain"></div></div>
+                <div class="av a3" style="width:64px;height:64px;"><div class="av-grain"></div></div>
+              </div>
+              <div class="match-name">Night Owl</div>
+              <div class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5L7.2 17l.9-5.4L4.2 7.7l5.4-.8Z"/></svg> Verified · 4.9 conversation rating</div>
+              <div class="tags"><span class="tag">Books</span><span class="tag">Late nights</span><span class="tag">Good listener</span></div>
+            </div>
+            <div class="ground">
+              <div class="gt"><span style="color:var(--lav);">·</span> This is for company, never dating.</div>
+              <div class="gt"><span style="color:var(--lav);">·</span> First names only. No numbers, no socials.</div>
+              <div class="gt"><span style="color:var(--lav);">·</span> Leave any time. One tap, no explanation.</div>
+            </div>
+            <div class="pad" style="margin-top:auto;padding-bottom:24px;"><div class="btn btn-lav"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15.5 8.5a4.5 4.5 0 0 1 0 7M18 5a9 9 0 0 1 0 14M4 9v6h4l5 4V5L8 9H4Z" stroke-linejoin="round"/></svg> Say hello</div></div>
+          </div>
+          <div class="home-ind"></div>
+        </div></div>
+        <div class="frame-cap"><div class="n">05</div><div class="t">Connected</div><div class="d">Just enough identity. A name, a rating, three interests. The ground rules are the last thing you read.</div></div>
+      </div>
+
+      <!-- 06 Voice call -->
+      <div class="frame">
+        <div class="device"><div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="sig">
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="4.5" width="3" height="6.5" rx="1"/><rect x="10" y="2" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity="0.4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/></svg>
+          </span></div>
+          <div class="body">
+            <div style="text-align:center;padding:14px 0 2px;"><div style="font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:0.12em;">ENCRYPTED · ANONYMOUS</div></div>
+            <div class="call">
+              <div class="call-glow"></div>
+              <div class="call-name">Night Owl</div>
+              <div class="call-timer">14:32 left</div>
+              <div class="wave">
+                <i style="height:12px;animation-delay:0s"></i><i style="height:22px;animation-delay:.2s"></i><i style="height:9px;animation-delay:.5s"></i><i style="height:26px;animation-delay:.1s"></i><i style="height:15px;animation-delay:.35s"></i><i style="height:20px;animation-delay:.6s"></i><i style="height:10px;animation-delay:.25s"></i><i style="height:24px;animation-delay:.45s"></i><i style="height:13px;animation-delay:.15s"></i>
+              </div>
+              <div class="call-ctrls">
+                <div class="cc"><div class="b"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4"/></svg></div><div class="lb">Mute</div></div>
+                <div class="cc"><div class="b"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke-linejoin="round"/><path d="M15.5 8.5a4.5 4.5 0 0 1 0 7M18.5 6a8 8 0 0 1 0 12"/></svg></div><div class="lb">Speaker</div></div>
+                <div class="cc"><div class="b leave"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a12 12 0 0 1 18 0v3l-4 1-1-3a9 9 0 0 0-8 0l-1 3-4-1v-3Z" fill="currentColor" stroke="none"/></svg></div><div class="lb" style="color:var(--red);">Leave</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div></div>
+        <div class="frame-cap"><div class="n">06</div><div class="t">Voice call</div><div class="d">Audio only. A breathing orb stands in for a face, presence without the pressure of a camera.</div></div>
+      </div>
+
+      <!-- 07 Continue -->
+      <div class="frame">
+        <div class="device"><div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="sig">
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="4.5" width="3" height="6.5" rx="1"/><rect x="10" y="2" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity="0.4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/></svg>
+          </span></div>
+          <div class="body" style="position:relative;">
+            <div class="call" style="opacity:.35;filter:blur(1px);">
+              <div class="call-glow" style="margin-top:60px;"></div>
+              <div class="call-name">Night Owl</div>
+              <div class="call-timer">00:00 left</div>
+            </div>
+            <div class="sheet">
+              <div class="sheet-grip"></div>
+              <div style="text-align:center;">
+                <div style="font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:0.12em;">TWENTY MINUTES</div>
+                <div style="font-size:24px;font-weight:600;letter-spacing:-0.03em;margin-top:12px;">That went quickly.</div>
+                <div style="font-size:14px;color:var(--dim);margin-top:10px;line-height:1.5;">Keep talking for another twenty?<br>You'll both need to agree.</div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin:22px 0;font-size:13px;color:var(--dim);">
+                <div class="av a3" style="width:26px;height:26px;"></div> Night Owl said yes
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:11px;">
+                <div class="btn btn-lav">Continue · 20 more minutes</div>
+                <div class="btn btn-quiet">End here, on a good note</div>
+              </div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div></div>
+        <div class="frame-cap"><div class="n">07</div><div class="t">Continue?</div><div class="d">The 20-minute check-in. Consent is mutual and visible, so you see the other person choose too.</div></div>
+      </div>
+
+      <!-- 08 End -->
+      <div class="frame">
+        <div class="device"><div class="screen warm">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="sig">
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="4.5" width="3" height="6.5" rx="1"/><rect x="10" y="2" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity="0.4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/></svg>
+          </span></div>
+          <div class="body">
+            <div class="center-col">
+              <div class="av a3" style="width:80px;height:80px;margin-bottom:24px;"><div class="av-grain"></div></div>
+              <div style="font-size:27px;font-weight:600;letter-spacing:-0.03em;">That's a wrap.</div>
+              <div style="font-size:15px;color:var(--dim);margin-top:10px;">You spent some time with Night Owl.</div>
+              <div class="recap">
+                <div class="recap-row"><span class="k">Duration</span><span class="v">38 minutes</span></div>
+                <div class="recap-row"><span class="k">Topic</span><span class="v">Books & late nights</span></div>
+                <div class="recap-row"><span class="k">Kept private</span><span class="v">Everything</span></div>
+              </div>
+            </div>
+            <div class="pad" style="padding-bottom:24px;"><div class="btn btn-primary">Rate the conversation</div></div>
+          </div>
+          <div class="home-ind"></div>
+        </div></div>
+        <div class="frame-cap"><div class="n">08</div><div class="t">End of call</div><div class="d">A gentle close. What you shared is summarised, and what stayed private is named on purpose.</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ AFTER ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="eyebrow">Afterward</div>
+    <h2 class="h2">Reputation is built on how it felt, not on looks or followers.</h2>
+    <p class="lede">You rate the quality of the conversation, quietly. And you can only ever reach someone again if you both, separately, choose to.</p>
+
+    <div class="screens-flow">
+
+      <!-- 09 Rate -->
+      <div class="frame">
+        <div class="device"><div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="sig">
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="4.5" width="3" height="6.5" rx="1"/><rect x="10" y="2" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity="0.4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/></svg>
+          </span></div>
+          <div class="body">
+            <div class="center-col" style="justify-content:flex-start;padding-top:36px;">
+              <div class="q" style="font-size:26px;">How was it?</div>
+              <div class="q-sub" style="text-align:center;">Only you see this. It shapes who you're paired with next.</div>
+              <div class="stars">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="var(--lav)"><path d="M12 2l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.8 6.1 20l1.2-6.5L2.5 8.9 9.1 8Z"/></svg>
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="var(--lav)"><path d="M12 2l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.8 6.1 20l1.2-6.5L2.5 8.9 9.1 8Z"/></svg>
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="var(--lav)"><path d="M12 2l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.8 6.1 20l1.2-6.5L2.5 8.9 9.1 8Z"/></svg>
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="var(--lav)"><path d="M12 2l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.8 6.1 20l1.2-6.5L2.5 8.9 9.1 8Z"/></svg>
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ghost)" stroke-width="1.6"><path d="M12 2l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.8 6.1 20l1.2-6.5L2.5 8.9 9.1 8Z"/></svg>
+              </div>
+              <div style="font-size:13px;color:var(--dim);">Really good company</div>
+              <div class="rate-tags">
+                <span class="rt on">Kind</span><span class="rt on">Great listener</span><span class="rt">Funny</span><span class="rt">Thoughtful</span><span class="rt on">Easy to talk to</span><span class="rt">Respectful</span>
+              </div>
+            </div>
+            <div class="pad" style="padding-bottom:24px;"><div class="btn btn-primary">Submit rating</div></div>
+          </div>
+          <div class="home-ind"></div>
+        </div></div>
+        <div class="frame-cap"><div class="n">09</div><div class="t">Rate conversation</div><div class="d">Private, tag-based, about warmth and respect. A reputation that can't be gamed by appearance.</div></div>
+      </div>
+
+      <!-- 10 Talk again -->
+      <div class="frame">
+        <div class="device"><div class="screen warm">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="sig">
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="4.5" width="3" height="6.5" rx="1"/><rect x="10" y="2" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity="0.4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/></svg>
+          </span></div>
+          <div class="body">
+            <div class="center-col">
+              <div class="ta-face">
+                <div style="display:flex;align-items:center;">
+                  <div class="av a1" style="width:70px;height:70px;border:3px solid var(--ink);margin-right:-12px;position:relative;z-index:2;"><div class="av-grain"></div></div>
+                  <div class="av a3" style="width:70px;height:70px;border:3px solid var(--ink);"><div class="av-grain"></div></div>
+                </div>
+              </div>
+              <div style="font-size:26px;font-weight:600;letter-spacing:-0.03em;">Talk again?</div>
+              <div style="font-size:15px;color:var(--dim);margin-top:12px;line-height:1.55;max-width:250px;">If you'd like to reach Night&nbsp;Owl another time, tap below. They'll never know unless they choose it too.</div>
+              <div class="mutual">
+                <div class="p"><b>You</b><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg></div>
+                <span style="color:var(--faint);">·</span>
+                <div class="p"><b>Night Owl</b><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg></div>
+              </div>
+            </div>
+            <div class="pad" style="padding-bottom:24px;display:flex;flex-direction:column;gap:11px;">
+              <div class="btn btn-lav">Yes, I'd talk again</div>
+              <div class="btn btn-quiet">No thanks</div>
+              <div style="text-align:center;font-size:11.5px;color:var(--faint);margin-top:4px;">A match only opens if you both say yes.</div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div></div>
+        <div class="frame-cap"><div class="n">10</div><div class="t">Talk again</div><div class="d">The only path to a repeat conversation is double opt-in, so no one is ever pursued.</div></div>
+      </div>
+
+      <!-- 11 Settings -->
+      <div class="frame">
+        <div class="device"><div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="sig">
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="4.5" width="3" height="6.5" rx="1"/><rect x="10" y="2" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity="0.4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/></svg>
+          </span></div>
+          <div class="body" style="overflow-y:auto;">
+            <div class="nav"><div class="title">You</div><div class="icon-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div></div>
+            <div class="me">
+              <div class="av a2" style="width:56px;height:56px;"><div class="av-grain"></div></div>
+              <div style="flex:1;">
+                <div class="nm">Noah</div>
+                <div class="st"><svg width="13" height="13" viewBox="0 0 24 24" fill="var(--lav)"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5L7.2 17l.9-5.4L4.2 7.7l5.4-.8Z"/></svg> Verified · 4.8 rating</div>
+              </div>
+              <div class="icon-btn plain"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></div>
+            </div>
+            <div class="group-label">Appearance</div>
+            <div class="group" style="padding:14px 16px;">
+              <div class="seg">
+                <div class="seg-o" data-set="light">Cream</div>
+                <div class="seg-o on" data-set="dark">Dark</div>
+              </div>
+              <div style="font-size:12px;color:var(--dim);margin-top:12px;">Pick the background that feels calmest to you.</div>
+            </div>
+            <div class="group-label">Your identity</div>
+            <div class="group">
+              <div class="row"><div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0 1 16 0"/></svg></div><div><div class="rt2">Display name</div></div><div class="rr">Noah <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div></div>
+              <div class="row"><div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/></svg></div><div><div class="rt2">Avatar</div></div><div class="rr"><div class="av a2" style="width:22px;height:22px;"></div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div></div>
+              <div class="row"><div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div><div><div class="rt2">Interests</div></div><div class="rr">Books, AI, Travel <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div></div>
+            </div>
+            <div class="group-label">Privacy</div>
+            <div class="group">
+              <div class="row"><div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6Z"/></svg></div><div><div class="rt2">Show my age</div><div class="rd">Off. Companionship, not dating</div></div><div class="rr"><div class="toggle"></div></div></div>
+              <div class="row"><div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/></svg></div><div><div class="rt2">Quiet hours</div><div class="rd">No matches 11pm–7am</div></div><div class="rr"><div class="toggle on"></div></div></div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div></div>
+        <div class="frame-cap"><div class="n">11</div><div class="t">Settings</div><div class="d">Appearance sits up top. Cream or Dark, your call (try it). Age is off by default, on purpose.</div></div>
+      </div>
+
+      <!-- 12 Safety -->
+      <div class="frame">
+        <div class="device"><div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="sig">
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="4.5" width="3" height="6.5" rx="1"/><rect x="10" y="2" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity="0.4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/></svg>
+          </span></div>
+          <div class="body" style="overflow-y:auto;">
+            <div class="nav"><div class="icon-btn plain"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></div><div class="title">Safety Center</div><div style="width:34px;"></div></div>
+            <div class="safe-hero">
+              <div class="safe-shield"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3l7 3v6c0 4-3 7.5-7 9-4-1.5-7-5-7-9V6Z"/><path d="M9 12l2 2 4-4"/></svg></div>
+              <div style="font-size:22px;font-weight:600;letter-spacing:-0.03em;">You're in control.</div>
+              <div style="font-size:13.5px;color:var(--dim);margin-top:8px;line-height:1.5;">Every conversation is protected. Leaving is always one tap away.</div>
+            </div>
+            <div class="group" style="margin-top:20px;">
+              <div class="row"><div class="ri" style="color:var(--red);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 9v4M12 17h.01M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg></div><div><div class="rt2">Report & leave</div><div class="rd">Ends instantly, flags for review</div></div><div class="rr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div></div>
+              <div class="row"><div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2a5 5 0 0 0-5 5v3a5 5 0 0 0 10 0V7a5 5 0 0 0-5-5Z"/><path d="M4 11a8 8 0 0 0 16 0"/></svg></div><div><div class="rt2">AI moderation</div><div class="rd">Listens for harm, never stores</div></div><div class="rr"><div class="toggle on"></div></div></div>
+              <div class="row"><div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5L7.2 17l.9-5.4L4.2 7.7l5.4-.8Z"/></svg></div><div><div class="rt2">Verify my identity</div><div class="rd">Adds a badge · stays private</div></div><div class="rr">Get badge <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div></div>
+              <div class="row"><div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div><div><div class="rt2">Blocked people</div><div class="rd">They can never be matched to you</div></div><div class="rr">3 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div></div>
+            </div>
+            <div style="margin:16px 26px 0;font-size:11.5px;color:var(--faint);line-height:1.5;">No unsolicited messages, ever. Someone can only reach you if you both chose to talk again.</div>
+          </div>
+          <div class="home-ind"></div>
+        </div></div>
+        <div class="frame-cap"><div class="n">12</div><div class="t">Safety Center</div><div class="d">The highest-priority surface. Report & leave sits first and coloured, where a thumb can find it fast.</div></div>
+      </div>
+
+      <!-- 13 Premium -->
+      <div class="frame">
+        <div class="device"><div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>9:41</span><span class="sig">
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="4.5" width="3" height="6.5" rx="1"/><rect x="10" y="2" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity="0.4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/></svg>
+          </span></div>
+          <div class="body">
+            <div class="prem">
+              <div style="display:flex;justify-content:flex-end;padding:6px 22px 0;"><div class="icon-btn plain"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></div></div>
+              <div class="prem-logo"><div class="pl">Hello<span class="comma">,</span> you.</div><div class="plus">+</div></div>
+              <div class="prem-sub">For the nights you'd rather not spend alone.</div>
+              <div class="prem-feats">
+                <div class="pf"><span class="pfi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M13 2 3 14h7l-1 8 10-12h-7Z"/></svg></span><div><div class="pft">Priority matching</div><div class="pfd">Skip the queue at 2am, when it matters most</div></div></div>
+                <div class="pf"><span class="pfi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><div class="pft">Longer sessions</div><div class="pfd">Start at 40 minutes instead of 20</div></div></div>
+                <div class="pf"><span class="pfi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5L7.2 17l.9-5.4L4.2 7.7l5.4-.8Z"/></svg></span><div><div class="pft">Choose the mood you meet</div><div class="pfd">Filter for listeners, thinkers, or comics</div></div></div>
+                <div class="pf"><span class="pfi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg></span><div><div class="pft">Custom avatars</div><div class="pfd">A wider set of quiet, abstract palettes</div></div></div>
+              </div>
+              <div class="price">
+                <div class="pm">7 days free, then</div>
+                <div class="pp">$11.99 / month</div>
+                <div class="btn btn-lav" style="margin-top:14px;">Try it free</div>
+                <div style="font-size:11px;color:var(--faint);margin:12px 0 20px;">Cancel anytime · Restore purchase</div>
+              </div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div></div>
+        <div class="frame-cap"><div class="n">13</div><div class="t">Hello, you.<span style="color:var(--lav)"> +</span></div><div class="d">Premium sells time and presence, never reach or status. It stays true to the promise.</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ WAITLIST ============ -->
+<section class="section" id="landing">
+  <div class="wrap">
+    <div class="eyebrow">Waitlist</div>
+    <h2 class="h2">The landing page.</h2>
+    <p class="lede">One promise, restrained. Nothing to explain because the feeling does the work.</p>
+
+    <div class="landing">
+      <div class="landing-top">
+        <div style="display:flex;align-items:center;gap:11px;">
+          <svg width="24" height="24" viewBox="0 0 80 80" fill="none"><rect x="10" y="11" width="60" height="44" rx="18" stroke="url(#brand)" stroke-width="4"/><path d="M27 55 C25 63 20 69 13 72" stroke="url(#brand)" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="33" r="6" fill="#B7ACE4"/></svg>
+          <span style="font-size:19px;font-weight:600;letter-spacing:-0.03em;">Hello<span style="color:var(--lav)">,</span> you.</span>
+        </div>
+        <div class="landing-nav"><span>How it works</span><span>Safety</span><span>Premium</span></div>
+        <div style="font-size:13.5px;color:var(--text);border:1px solid var(--hair-strong);padding:9px 18px;border-radius:20px;">Get early access</div>
+      </div>
+      <div class="landing-body">
+        <div>
+          <div class="landing-h1">Sometimes you<br>just need <em>someone<br>there.</em></div>
+          <div class="landing-p">It pairs you with one real person for a twenty-minute talk, whether you're driving home, cooking dinner, or wide awake at 3am. No swiping. No profiles to perform. No last names.</div>
+          <div class="waitform">
+            <div class="inp">you@email.com</div>
+            <div class="sub">Request invite</div>
+          </div>
+          <div class="wait-meta">
+            <div style="display:flex;">
+              <div class="av a1" style="width:24px;height:24px;border:2px solid var(--ink);"></div>
+              <div class="av a4" style="width:24px;height:24px;border:2px solid var(--ink);margin-left:-8px;"></div>
+              <div class="av a5" style="width:24px;height:24px;border:2px solid var(--ink);margin-left:-8px;"></div>
+            </div>
+            41,200 already on the list · invites weekly
+          </div>
+        </div>
+        <div class="landing-visual">
+          <div class="mini-phone">
+            <div class="screen warm" style="border-radius:36px;">
+              <div class="status" style="height:40px;padding-bottom:4px;"><span style="font-size:12px;">9:41</span><span class="sig"><svg width="20" height="10" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity="0.4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/></svg></span></div>
+              <div class="body" style="align-items:center;justify-content:center;padding:0 24px;text-align:center;">
+                <div class="call-glow" style="width:110px;height:110px;margin:0 0 26px;"></div>
+                <div style="font-size:20px;font-weight:600;letter-spacing:-0.03em;">Night Owl</div>
+                <div style="font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:6px;">14:32 left</div>
+                <div class="wave" style="margin-top:20px;"><i style="height:10px"></i><i style="height:20px"></i><i style="height:8px"></i><i style="height:24px"></i><i style="height:14px"></i><i style="height:18px"></i><i style="height:9px"></i></div>
+              </div>
+              <div class="home-ind" style="bottom:8px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APP STORE ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="eyebrow">App Store</div>
+    <h2 class="h2">The screenshots.</h2>
+    <p class="lede">Caption-led and quiet, each one carries a single line of the promise.</p>
+
+    <div class="aps">
+      <div class="aps-card aps-1">
+        <div class="ah">Not alone,<br><em>on your terms.</em></div>
+        <div class="ap">For the good news and the hard nights. One real person, twenty minutes.</div>
+        <div class="aps-shot">
+          <div style="text-align:center;padding-top:6px;"><div class="kicker" style="font-size:10px;">Right now</div><div style="font-size:19px;font-weight:600;letter-spacing:-0.03em;margin-top:8px;">How are you feeling?</div></div>
+          <div class="opt sel" style="margin-top:16px;padding:11px 14px;"><div class="gl" style="width:32px;height:32px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></div><div class="ol" style="font-size:14px;">Celebrating</div><div class="chk" style="margin-left:auto;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg></div></div>
+          <div class="opt" style="margin-top:9px;padding:11px 14px;"><div class="gl" style="width:32px;height:32px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 20a6 6 0 0 0-12 0"/><circle cx="12" cy="8" r="4"/></svg></div><div class="ol" style="font-size:14px;">Lonely</div></div>
+        </div>
+      </div>
+      <div class="aps-card aps-2">
+        <div class="ah">A voice,<br><em>never a number.</em></div>
+        <div class="ap">Calls stay in the app. Nothing to exchange, nothing to leak.</div>
+        <div class="aps-shot" style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div class="call-glow" style="width:96px;height:96px;margin:0 0 20px;"></div>
+          <div style="font-size:18px;font-weight:600;letter-spacing:-0.03em;">Night Owl</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:5px;">14:32 left</div>
+          <div class="wave" style="margin-top:16px;"><i style="height:9px"></i><i style="height:18px"></i><i style="height:7px"></i><i style="height:22px"></i><i style="height:12px"></i><i style="height:16px"></i></div>
+        </div>
+      </div>
+      <div class="aps-card aps-3">
+        <div class="ah">Judged on<br><em>kindness.</em></div>
+        <div class="ap">Reputation from conversation quality, not looks or followers.</div>
+        <div class="aps-shot" style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div style="font-size:17px;font-weight:600;letter-spacing:-0.03em;">How was it?</div>
+          <div class="stars" style="margin:16px 0 6px;gap:7px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--lav)"><path d="M12 2l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.8 6.1 20l1.2-6.5L2.5 8.9 9.1 8Z"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--lav)"><path d="M12 2l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.8 6.1 20l1.2-6.5L2.5 8.9 9.1 8Z"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--lav)"><path d="M12 2l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.8 6.1 20l1.2-6.5L2.5 8.9 9.1 8Z"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--lav)"><path d="M12 2l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.8 6.1 20l1.2-6.5L2.5 8.9 9.1 8Z"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--lav)"><path d="M12 2l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.8 6.1 20l1.2-6.5L2.5 8.9 9.1 8Z"/></svg>
+          </div>
+          <div class="rate-tags" style="margin-top:14px;"><span class="rt on" style="font-size:11px;">Kind</span><span class="rt on" style="font-size:11px;">Great listener</span><span class="rt" style="font-size:11px;">Thoughtful</span></div>
+        </div>
+      </div>
+      <div class="aps-card aps-4">
+        <div class="ah">Safe by<br><em>design.</em></div>
+        <div class="ap">Anonymous. AI-moderated. Leaving is always one tap.</div>
+        <div class="aps-shot" style="display:flex;flex-direction:column;align-items:center;">
+          <div class="safe-shield" style="margin-top:14px;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3l7 3v6c0 4-3 7.5-7 9-4-1.5-7-5-7-9V6Z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <div style="font-size:16px;font-weight:600;letter-spacing:-0.03em;margin-top:4px;">You're in control</div>
+          <div class="btn btn-danger" style="height:42px;width:180px;margin-top:18px;font-size:14px;">Report & leave</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOT ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="fm">Hello<span class="comma">,</span> you.</div>
+    <div class="ft">Sometimes you don't need a relationship. You just need someone there.</div>
+    <div class="fc">Concept brand & product design · SF Pro · Dark &amp; Cream themes</div>
+  </div>
+</footer>
+
+<script>
+  const root = document.documentElement;
+  function setTheme(t){
+    root.setAttribute('data-theme', t);
+    document.querySelectorAll('[data-set]').forEach(el=>{
+      el.classList.toggle('on', el.getAttribute('data-set') === t);
+    });
+  }
+  document.querySelectorAll('[data-set]').forEach(el=>{
+    el.addEventListener('click', ()=> setTheme(el.getAttribute('data-set')));
+  });
+</script>
+
+</body>
+</html>
