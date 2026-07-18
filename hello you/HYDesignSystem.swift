@@ -20,10 +20,12 @@ extension Color {
 /// Colour tokens from the "Hello, you." design (dark theme).
 enum HYColor {
     static let ink = Color(hex: 0x0A0A0C)
+    static let ink2 = Color(hex: 0x0E0E11)
     static let warmTop = Color(hex: 0x141319)
     static let text = Color(hex: 0xF2F0EC)
     static let dim = Color(hex: 0xF2F0EC, opacity: 0.54)
     static let faint = Color(hex: 0xF2F0EC, opacity: 0.30)
+    static let ghost = Color(hex: 0xF2F0EC, opacity: 0.14)
     static let hairStrong = Color.white.opacity(0.14)
     static let lav = Color(hex: 0xB7ACE4)
     static let lavLight = Color(hex: 0xC9BFF2)
@@ -37,6 +39,52 @@ enum HYColor {
     static let lavSelBorder = Color(hex: 0x8B7ECC, opacity: 0.55)
     static let lavSelRing = Color(hex: 0x8B7ECC, opacity: 0.08)
     static let onLavender = Color(hex: 0x191233)
+
+    static let green = Color(hex: 0x8FBF9F)
+    static let red = Color(hex: 0xE0928A)
+    static let onLeave = Color(hex: 0x2A1512)
+}
+
+/// A gradient-filled avatar circle standing in for a person, matching the design's `.av.a1`–`.a5` swatches.
+struct HYAvatar: View {
+    enum Kind {
+        case a1, a2, a3, a4, a5
+
+        var colors: [Color] {
+            switch self {
+            case .a1: return [Color(hex: 0xC9BFF2), Color(hex: 0x6E63A8), Color(hex: 0x2A2340)]
+            case .a2: return [Color(hex: 0xD8D2C6), Color(hex: 0x8C8579), Color(hex: 0x2E2B26)]
+            case .a3: return [Color(hex: 0x9FB2D6), Color(hex: 0x3E4C74), Color(hex: 0x1B2138)]
+            case .a4: return [Color(hex: 0xE4C7B8), Color(hex: 0x9E7663), Color(hex: 0x2E211B)]
+            case .a5: return [Color(hex: 0xBFC9BF), Color(hex: 0x5F7563), Color(hex: 0x22271F)]
+            }
+        }
+
+        var center: UnitPoint {
+            switch self {
+            case .a1: return UnitPoint(x: 0.25, y: 0.2)
+            case .a2: return UnitPoint(x: 0.3, y: 0.25)
+            case .a3: return UnitPoint(x: 0.7, y: 0.2)
+            case .a4: return UnitPoint(x: 0.3, y: 0.75)
+            case .a5: return UnitPoint(x: 0.5, y: 0.25)
+            }
+        }
+    }
+
+    var kind: Kind
+    var size: CGFloat = 64
+    var borderColor: Color? = nil
+
+    var body: some View {
+        Circle()
+            .fill(
+                RadialGradient(colors: kind.colors, center: kind.center, startRadius: 0, endRadius: size * 0.9)
+            )
+            .frame(width: size, height: size)
+            .overlay(
+                Circle().stroke(borderColor ?? Color.white.opacity(0.10), lineWidth: borderColor != nil ? 3 : 1)
+            )
+    }
 }
 
 /// The tail of the speech-bubble mark: a single curve trailing down-left from the bubble.

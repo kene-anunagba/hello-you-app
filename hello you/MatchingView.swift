@@ -10,6 +10,7 @@ import SwiftUI
 
 struct MatchingView: View {
     @Environment(\.dismiss) private var dismiss
+    @State private var didFindMatch = false
 
     var body: some View {
         ZStack {
@@ -75,6 +76,13 @@ struct MatchingView: View {
         }
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
+        .task {
+            try? await Task.sleep(for: .seconds(3))
+            didFindMatch = true
+        }
+        .navigationDestination(isPresented: $didFindMatch) {
+            ConnectedView()
+        }
     }
 }
 
