@@ -27,6 +27,7 @@ private let needOptions: [NeedOption] = [
 
 struct NeedSelectionView: View {
     @Environment(\.dismiss) private var dismiss
+    @ObservedObject private var hyTheme = HYThemeStore.shared
     @State private var selectedNeedID: UUID? = needOptions.first?.id
 
     private let columns = [GridItem(.flexible(), spacing: 11), GridItem(.flexible(), spacing: 11)]
@@ -81,7 +82,7 @@ struct NeedSelectionView: View {
                         .foregroundColor(HYColor.onLavender)
                         .frame(maxWidth: .infinity)
                         .frame(height: 54)
-                        .background(HYColor.lav, in: RoundedRectangle(cornerRadius: 27))
+                        .background(HYColor.lavFill, in: RoundedRectangle(cornerRadius: 27))
                 }
                 .buttonStyle(.plain)
                 .padding(.horizontal, 26)
@@ -89,6 +90,7 @@ struct NeedSelectionView: View {
                 .padding(.bottom, 22)
             }
         }
+        .preferredColorScheme(hyTheme.isDark ? .dark : .light)
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
     }

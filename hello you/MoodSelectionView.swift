@@ -25,6 +25,7 @@ private let moodOptions: [MoodOption] = [
 
 struct MoodSelectionView: View {
     @Environment(\.dismiss) private var dismiss
+    @ObservedObject private var hyTheme = HYThemeStore.shared
     @State private var selectedMoodID: UUID? = moodOptions.first?.id
 
     var body: some View {
@@ -85,6 +86,7 @@ struct MoodSelectionView: View {
                 .padding(.bottom, 22)
             }
         }
+        .preferredColorScheme(hyTheme.isDark ? .dark : .light)
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
     }

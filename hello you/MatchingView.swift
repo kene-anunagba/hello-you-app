@@ -10,6 +10,7 @@ import SwiftUI
 
 struct MatchingView: View {
     @Environment(\.dismiss) private var dismiss
+    @ObservedObject private var hyTheme = HYThemeStore.shared
     @State private var didFindMatch = false
 
     var body: some View {
@@ -74,6 +75,7 @@ struct MatchingView: View {
                 .padding(.bottom, 26)
             }
         }
+        .preferredColorScheme(hyTheme.isDark ? .dark : .light)
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
         .task {
@@ -119,7 +121,7 @@ private struct PulseRing: View {
 
     var body: some View {
         Circle()
-            .stroke(HYColor.lav.opacity(0.5), lineWidth: 1)
+            .stroke(HYColor.lavFill.opacity(0.5), lineWidth: 1)
             .frame(width: 96, height: 96)
             .scaleEffect(reduceMotion ? staticScale : (animate ? 3 : 1))
             .opacity(reduceMotion ? 0.4 : (animate ? 0 : 0.7))

@@ -17,29 +17,38 @@ extension Color {
     }
 }
 
-/// Colour tokens from the "Hello, you." design (dark theme).
+/// Colour tokens from the "Hello, you." design. Themed tokens read live from
+/// `HYThemeStore.shared`, so any screen that also holds an `@ObservedObject`
+/// reference to that store re-renders with the new values when it changes.
+/// A few tokens (marked below) are constants in the source CSS — they never
+/// change between Cream and Dark — most notably `--lav-fill`, the solid
+/// lavender used for filled buttons, and the brand mark's own SVG gradient.
 enum HYColor {
-    static let ink = Color(hex: 0x0A0A0C)
-    static let ink2 = Color(hex: 0x0E0E11)
-    static let warmTop = Color(hex: 0x141319)
-    static let text = Color(hex: 0xF2F0EC)
-    static let dim = Color(hex: 0xF2F0EC, opacity: 0.54)
-    static let faint = Color(hex: 0xF2F0EC, opacity: 0.30)
-    static let ghost = Color(hex: 0xF2F0EC, opacity: 0.14)
-    static let hairStrong = Color.white.opacity(0.14)
-    static let lav = Color(hex: 0xB7ACE4)
-    static let lavLight = Color(hex: 0xC9BFF2)
-    static let lavDeep = Color(hex: 0x8F84C4)
-    static let onPrimary = Color(hex: 0x0A0A0C)
+    private static var p: HYPalette { HYThemeStore.shared.palette }
 
-    static let surface = Color(hex: 0x161619)
-    static let surface2 = Color(hex: 0x1E1E23)
-    static let hair = Color.white.opacity(0.075)
-    static let lavSoft = Color(hex: 0xB7ACE4, opacity: 0.16)
+    static var ink: Color { p.ink }
+    static var ink2: Color { p.ink2 }
+    static var warmTop: Color { p.warmTop }
+    static var text: Color { p.text }
+    static var dim: Color { p.dim }
+    static var faint: Color { p.faint }
+    static var ghost: Color { p.ghost }
+    static var hair: Color { p.hair }
+    static var hairStrong: Color { p.hairStrong }
+    static var lav: Color { p.lav }
+    static var lavDeep: Color { p.lavDeep }
+    static var lavSoft: Color { p.lavSoft }
+    static var onPrimary: Color { p.onPrimary }
+    static var surface: Color { p.surface }
+    static var surface2: Color { p.surface2 }
+    static var surface3: Color { p.surface3 }
+
+    // Constants: unchanged between Cream and Dark per the source CSS.
+    static let lavFill = Color(hex: 0xB7ACE4)
+    static let lavLight = Color(hex: 0xC9BFF2)
     static let lavSelBorder = Color(hex: 0x8B7ECC, opacity: 0.55)
     static let lavSelRing = Color(hex: 0x8B7ECC, opacity: 0.08)
     static let onLavender = Color(hex: 0x191233)
-
     static let green = Color(hex: 0x8FBF9F)
     static let red = Color(hex: 0xE0928A)
     static let onLeave = Color(hex: 0x2A1512)
@@ -106,15 +115,19 @@ private struct HYMarkTail: Shape {
 struct HYMark: View {
     var size: CGFloat = 56
 
+    // The brand mark's SVG defs use fixed hex stops, not the themed CSS
+    // variables, so the logo stays constant across Cream and Dark.
+    private static let brandDeep = Color(hex: 0x8F84C4)
+
     private var scale: CGFloat { size / 80 }
     private var strokeGradient: LinearGradient {
-        LinearGradient(colors: [HYColor.lavLight, HYColor.lavDeep], startPoint: .top, endPoint: .bottom)
+        LinearGradient(colors: [HYColor.lavLight, Self.brandDeep], startPoint: .top, endPoint: .bottom)
     }
 
     var body: some View {
         ZStack {
             RadialGradient(
-                colors: [HYColor.lav.opacity(0.5), HYColor.lav.opacity(0)],
+                colors: [HYColor.lavFill.opacity(0.5), HYColor.lavFill.opacity(0)],
                 center: .center,
                 startRadius: 0,
                 endRadius: 27 * scale
@@ -131,10 +144,93 @@ struct HYMark: View {
                 .stroke(strokeGradient, style: StrokeStyle(lineWidth: 3.4 * scale, lineCap: .round))
 
             Circle()
-                .fill(HYColor.lav)
+                .fill(HYColor.lavFill)
                 .frame(width: 10.8 * scale, height: 10.8 * scale)
                 .position(x: 40 * scale, y: 33 * scale)
         }
         .frame(width: size, height: size)
+    }
+}
+
+/// A single settings/safety list row: a small icon tile, a title with an
+/// optional subtitle, and flexible trailing content (chevron, toggle, badge).
+struct HYRow<Trailing: View>: View {
+    var systemImage: String
+    var title: String
+    var subtitle: String? = nil
+    var iconColor: Color = HYColor.text
+    var showTopBorder: Bool = true
+    @ViewBuilder var trailing: () -> Trailing
+
+    var body: some View {
+        HStack(spacing: 14) {
+            RoundedRectangle(cornerRadius: 9)
+                .fill(HYColor.surface3)
+                .frame(width: 30, height: 30)
+                .overlay(
+                    Image(systemName: systemImage)
+                        .font(.system(size: 14))
+                        .foregroundColor(iconColor)
+                )
+
+            VStack(alignment: .leading, spacing: 1) {
+                Text(title)
+                    .font(.system(size: 15, weight: .medium))
+                    .tracking(-0.15)
+                    .foregroundColor(HYColor.text)
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.system(size: 12))
+                        .foregroundColor(HYColor.dim)
+                }
+            }
+
+            Spacer(minLength: 8)
+
+            trailing()
+        }
+        .padding(.horizontal, 18)
+        .padding(.vertical, 15)
+        .overlay(alignment: .top) {
+            if showTopBorder {
+                Rectangle().fill(HYColor.hair).frame(height: 1)
+            }
+        }
+    }
+}
+
+/// The rounded, bordered card that groups a set of `HYRow`s together.
+struct HYRowGroup<Content: View>: View {
+    @ViewBuilder var content: () -> Content
+
+    var body: some View {
+        VStack(spacing: 0) {
+            content()
+        }
+        .background(HYColor.surface, in: RoundedRectangle(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 18).stroke(HYColor.hair, lineWidth: 1))
+    }
+}
+
+/// A section label above a row group, matching the design's uppercase caption.
+struct HYGroupLabel: View {
+    var text: String
+
+    var body: some View {
+        Text(text)
+            .font(.system(size: 12, weight: .regular))
+            .tracking(0.96)
+            .textCase(.uppercase)
+            .foregroundColor(HYColor.faint)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+/// A chevron accessory for rows that navigate or expand.
+struct HYChevron: View {
+    var body: some View {
+        Image(systemName: "chevron.right")
+            .font(.system(size: 13, weight: .semibold))
+            .foregroundColor(HYColor.faint)
     }
 }

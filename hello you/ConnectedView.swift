@@ -18,6 +18,8 @@ private let groundRules = [
 ]
 
 struct ConnectedView: View {
+    @ObservedObject private var hyTheme = HYThemeStore.shared
+
     var body: some View {
         ZStack {
             HYColor.ink.ignoresSafeArea()
@@ -64,13 +66,14 @@ struct ConnectedView: View {
                     .foregroundColor(HYColor.onLavender)
                     .frame(maxWidth: .infinity)
                     .frame(height: 54)
-                    .background(HYColor.lav, in: RoundedRectangle(cornerRadius: 27))
+                    .background(HYColor.lavFill, in: RoundedRectangle(cornerRadius: 27))
                 }
                 .buttonStyle(.plain)
                 .padding(.horizontal, 26)
                 .padding(.bottom, 24)
             }
         }
+        .preferredColorScheme(hyTheme.isDark ? .dark : .light)
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
     }

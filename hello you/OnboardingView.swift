@@ -9,6 +9,11 @@
 import SwiftUI
 
 struct OnboardingView: View {
+    @ObservedObject private var hyTheme = HYThemeStore.shared
+    #if DEBUG
+    @State private var showDevMenu = false
+    #endif
+
     var body: some View {
         ZStack {
             HYColor.ink.ignoresSafeArea()
@@ -19,6 +24,25 @@ struct OnboardingView: View {
                 endRadius: 420
             )
             .ignoresSafeArea()
+
+            #if DEBUG
+            VStack {
+                HStack {
+                    Spacer()
+                    Button {
+                        showDevMenu = true
+                    } label: {
+                        Text("DEV MENU")
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundColor(HYColor.faint)
+                            .padding(8)
+                    }
+                }
+                Spacer()
+            }
+            .padding(.top, 8)
+            .padding(.trailing, 12)
+            #endif
 
             VStack(spacing: 0) {
                 Spacer()
@@ -86,8 +110,13 @@ struct OnboardingView: View {
             }
             .padding(.horizontal, 30)
         }
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(hyTheme.isDark ? .dark : .light)
         .navigationBarHidden(true)
+        #if DEBUG
+        .sheet(isPresented: $showDevMenu) {
+            DevMenuView()
+        }
+        #endif
     }
 }
 

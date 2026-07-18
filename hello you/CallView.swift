@@ -16,12 +16,13 @@ private let callDurationSeconds = 20 * 60
 private let waveDelays: [Double] = [0, 0.2, 0.5, 0.1, 0.35, 0.6, 0.25, 0.45, 0.15]
 
 struct CallView: View {
-    @Environment(\.dismiss) private var dismiss
+    @ObservedObject private var hyTheme = HYThemeStore.shared
 
     @State private var secondsRemaining = callDurationSeconds
     @State private var isMuted = false
     @State private var isSpeakerOn = false
     @State private var showContinueSheet = false
+    @State private var didEndCall = false
 
     private var timeString: String {
         let m = max(secondsRemaining, 0) / 60
@@ -63,15 +64,19 @@ struct CallView: View {
                             }
                         },
                         onEnd: {
-                            dismiss()
+                            didEndCall = true
                         }
                     )
                     .transition(.move(edge: .bottom))
                 }
             }
         }
+        .preferredColorScheme(hyTheme.isDark ? .dark : .light)
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
+        .navigationDestination(isPresented: $didEndCall) {
+            EndOfCallView()
+        }
         .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
             guard secondsRemaining > 0, !showContinueSheet else { return }
             secondsRemaining -= 1
@@ -148,7 +153,7 @@ struct CallView: View {
                     isActive: false,
                     isLeave: true
                 ) {
-                    dismiss()
+                    didEndCall = true
                 }
             }
             .padding(.bottom, 22)
@@ -171,7 +176,7 @@ private struct BreathingOrb: View {
                 )
             )
             .frame(width: 150, height: 150)
-            .shadow(color: HYColor.lav.opacity(animate ? 0.42 : 0.28), radius: animate ? 45 : 30)
+            .shadow(color: HYColor.lavFill.opacity(animate ? 0.42 : 0.28), radius: animate ? 45 : 30)
             .scaleEffect(animate ? 1.04 : 1)
             .padding(.top, 40)
             .onAppear {
@@ -285,7 +290,7 @@ private struct ContinueSheet: View {
                         .foregroundColor(HYColor.onLavender)
                         .frame(maxWidth: .infinity)
                         .frame(height: 54)
-                        .background(HYColor.lav, in: RoundedRectangle(cornerRadius: 27))
+                        .background(HYColor.lavFill, in: RoundedRectangle(cornerRadius: 27))
                 }
                 .buttonStyle(.plain)
 
