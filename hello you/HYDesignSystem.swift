@@ -36,6 +36,7 @@ enum HYColor {
     static let lavSoft = Color(hex: 0xB7ACE4, opacity: 0.16)
     static let lavSelBorder = Color(hex: 0x8B7ECC, opacity: 0.55)
     static let lavSelRing = Color(hex: 0x8B7ECC, opacity: 0.08)
+    static let onLavender = Color(hex: 0x191233)
 }
 
 /// The tail of the speech-bubble mark: a single curve trailing down-left from the bubble.
