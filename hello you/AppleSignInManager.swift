@@ -69,6 +69,18 @@ final class AppleSignInManager {
         return (session.user.id, profile)
     }
 
+    #if DEBUG
+    /// Dev-only stand-in for Sign in with Apple: Supabase anonymous auth,
+    /// so the rest of the flow (name entry, avatar picker, profile save,
+    /// routing) can be exercised before Apple Developer enrollment clears.
+    /// Requires "Allow anonymous sign-ins" enabled in the Supabase project.
+    func signInAnonymously() async throws -> (userID: UUID, profile: Profile?) {
+        let session = try await SupabaseManager.shared.client.auth.signInAnonymously()
+        let profile = try await fetchProfile(id: session.user.id)
+        return (session.user.id, profile)
+    }
+    #endif
+
     func fetchProfile(id: UUID) async throws -> Profile? {
         let rows: [Profile] = try await SupabaseManager.shared.client
             .from("profiles")

@@ -113,6 +113,11 @@ struct OnboardingView: View {
                         .multilineTextAlignment(.center)
                         .lineSpacing(3)
                         .padding(.top, 6)
+
+                    #if DEBUG
+                    devSignInButton
+                        .padding(.top, 16)
+                    #endif
                 }
                 .padding(.bottom, 24)
             }
@@ -152,12 +157,48 @@ struct OnboardingView: View {
     }
 
     private func handleSignIn() {
+        runSignIn { try await AppleSignInManager.shared.signIn() }
+    }
+
+    #if DEBUG
+    private var devSignInButton: some View {
+        VStack(spacing: 6) {
+            Text("— DEBUG BUILD ONLY —")
+                .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                .tracking(1)
+                .foregroundColor(.orange.opacity(0.85))
+
+            Button {
+                handleDevSignIn()
+            } label: {
+                Text("🛠 Dev sign in (anonymous)")
+                    .font(.system(size: 13, weight: .semibold, design: .monospaced))
+                    .foregroundColor(.orange)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 44)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .strokeBorder(style: StrokeStyle(lineWidth: 1.5, dash: [5, 3]))
+                            .foregroundColor(.orange)
+                    )
+            }
+            .buttonStyle(.plain)
+            .disabled(isSigningIn)
+        }
+    }
+
+    private func handleDevSignIn() {
+        runSignIn { try await AppleSignInManager.shared.signInAnonymously() }
+    }
+    #endif
+
+    private func runSignIn(_ signIn: @escaping () async throws -> (userID: UUID, profile: Profile?)) {
         guard !isSigningIn else { return }
         isSigningIn = true
         signInError = nil
         Task {
             do {
-                let (userID, profile) = try await AppleSignInManager.shared.signIn()
+                let (userID, profile) = try await signIn()
                 isSigningIn = false
                 if profile != nil {
                     goToMoodSelection = true
