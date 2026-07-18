@@ -56,7 +56,7 @@ enum HYColor {
 
 /// A gradient-filled avatar circle standing in for a person, matching the design's `.av.a1`–`.a5` swatches.
 struct HYAvatar: View {
-    enum Kind {
+    enum Kind: String, CaseIterable, Codable {
         case a1, a2, a3, a4, a5
 
         var colors: [Color] {
